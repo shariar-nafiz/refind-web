@@ -90,7 +90,7 @@ export const Register = () => {
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Tanvir Hasan"
+                placeholder="e.g. Shariar Nafiz"
                 required
                 className="h-10 text-sm"
               />
@@ -106,7 +106,7 @@ export const Register = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tanvir@example.com"
+                placeholder="shariarnafiz@example.com"
                 required
                 className="h-10 text-sm"
               />

@@ -68,7 +68,7 @@ export const Login = () => {
                 type="text"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder="user@example.com or +8801700000000"
+                placeholder="shariarnafiz@example.com or +8801700000000"
                 required
                 autoComplete="username"
                 className="h-10 text-sm"
