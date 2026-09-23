@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowRight, Compass, Lock, User as UserIcon } from 'lucide-react'
+import { AlertCircle, ArrowRight, Compass, Lock, User as UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { authApi } from '@/api/auth.api'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ export const Login = () => {
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null)
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard'
 
@@ -27,6 +28,7 @@ export const Login = () => {
     }
 
     setLoading(true)
+    setPendingVerificationEmail(null)
     try {
       const authData = await authApi.login({
         identifier: identifier.trim(),
@@ -37,7 +39,11 @@ export const Login = () => {
       navigate(from, { replace: true })
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } }
-      toast.error(error.response?.data?.message || 'Failed to login. Please check your credentials.')
+      const msg = error.response?.data?.message || 'Failed to login. Please check your credentials.'
+      if (msg.toLowerCase().includes('pending email verification') || msg.toLowerCase().includes('verify your email')) {
+        setPendingVerificationEmail(identifier.trim())
+      }
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
@@ -58,6 +64,24 @@ export const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {pendingVerificationEmail && (
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-600 dark:text-amber-400 flex flex-col gap-2">
+                <div className="flex items-center gap-1.5 font-medium">
+                  <AlertCircle className="size-4 shrink-0" />
+                  <span>This account is pending email verification.</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/verify-email?email=${encodeURIComponent(pendingVerificationEmail)}`)}
+                  className="w-full h-8 text-xs border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20"
+                >
+                  Verify Email Now
+                  <ArrowRight className="size-3.5 ml-1" />
+                </Button>
+              </div>
+            )}
             {/* Identifier */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground flex items-center gap-1">
