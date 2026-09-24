@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { ApiResponse, AuthResponse } from './types'
+import type { ApiResponse, AuthResponse, RegisterResponse, ResendOtpRequest, VerifyEmailRequest } from './types'
 
 export interface RegisterPayload {
   email: string
@@ -14,9 +14,18 @@ export interface LoginPayload {
 }
 
 export const authApi = {
-  register: async (payload: RegisterPayload): Promise<AuthResponse> => {
-    const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', payload)
+  register: async (payload: RegisterPayload): Promise<RegisterResponse> => {
+    const res = await apiClient.post<ApiResponse<RegisterResponse>>('/auth/register', payload)
     return res.data.data
+  },
+
+  verifyEmail: async (payload: VerifyEmailRequest): Promise<AuthResponse> => {
+    const res = await apiClient.post<ApiResponse<AuthResponse>>('/auth/verify-email', payload)
+    return res.data.data
+  },
+
+  resendOtp: async (payload: ResendOtpRequest): Promise<void> => {
+    await apiClient.post<ApiResponse<void>>('/auth/resend-otp', payload)
   },
 
   login: async (payload: LoginPayload): Promise<AuthResponse> => {
@@ -32,3 +41,4 @@ export const authApi = {
     }
   },
 }
+

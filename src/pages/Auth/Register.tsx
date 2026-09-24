@@ -6,12 +6,10 @@ import { authApi } from '@/api/auth.api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/store/useAuthStore'
-
+ 
 export const Register = () => {
   const navigate = useNavigate()
-  const setAuth = useAuthStore((s) => s.setAuth)
-
+ 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -45,15 +43,20 @@ export const Register = () => {
 
     setLoading(true)
     try {
-      const authData = await authApi.register({
+      const regResponse = await authApi.register({
         fullName: fullName.trim(),
         email: email.trim(),
         phone: formattedPhone,
         password,
       })
-      setAuth(authData)
-      toast.success('Account created successfully! Welcome to ReFind.')
-      navigate('/dashboard')
+
+      if (regResponse.requiresVerification) {
+        toast.success('Account created! Please enter the 6-digit code sent to your email.')
+        navigate(`/verify-email?email=${encodeURIComponent(regResponse.email || email.trim())}`)
+      } else {
+        toast.success('Account created successfully! You can now sign in.')
+        navigate('/login')
+      }
     } catch (err: unknown) {
       const error = err as {
         response?: { data?: { message?: string; errors?: Array<{ field: string; message: string }> } }

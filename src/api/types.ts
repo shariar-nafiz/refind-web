@@ -53,6 +53,21 @@ export interface AuthResponse {
   role: UserRole;
 }
 
+export interface RegisterResponse {
+  message: string;
+  email: string;
+  requiresVerification: boolean;
+}
+
+export interface VerifyEmailRequest {
+  email: string;
+  otp: string;
+}
+
+export interface ResendOtpRequest {
+  email: string;
+}
+
 export interface Category {
   id: number;
   name: string;

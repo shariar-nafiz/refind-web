@@ -7,6 +7,7 @@ import { ItemsDirectory } from '@/pages/ItemsDirectory'
 import { ItemDetail } from '@/pages/ItemDetail'
 import { Login } from '@/pages/Auth/Login'
 import { Register } from '@/pages/Auth/Register'
+import { VerifyEmail } from '@/pages/Auth/VerifyEmail'
 import { ReportWizard } from '@/pages/ReportWizard'
 import { DashboardHome } from '@/pages/Dashboard/DashboardHome'
 import { MyItems } from '@/pages/Dashboard/MyItems'
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: 'items/:id', element: <ItemDetail /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'verify-email', element: <VerifyEmail /> },
 
       // Protected User Routes
       {
